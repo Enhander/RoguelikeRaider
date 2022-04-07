@@ -14,6 +14,8 @@ public abstract class PhysicsBehavior : MonoBehaviour {
         [SerializeField]
         private int CollisionSteps;
         [SerializeField]
+        private bool Moving;
+        [SerializeField]
         private LayerMask LayerMask;
 
         [Header("Inspector Injected References")]
@@ -24,27 +26,32 @@ public abstract class PhysicsBehavior : MonoBehaviour {
 
         [Header("Debugging Viewables")]
         [SerializeReference]
-        private PhysicsData physicsData;
+        protected PhysicsData physicsData;
         [SerializeReference]
-        private PhysicsLogic physicsLogic;
+        protected PhysicsLogic physicsLogic;
     #endregion
 
     #region Initialization Methods
-    protected virtual void Awake() {
-        physicsData = ConstructPhysicsData(MovementSpeed, MovementAngle, MovementAcceleration, CollisionSteps, LayerMask);
-        physicsLogic = ConstructPhysicsLogic(rigidBody, collider, physicsData);
-    }
+        protected virtual void Awake() {
+            physicsData = ConstructPhysicsData(MovementSpeed, MovementAngle, MovementAcceleration, Moving, CollisionSteps, LayerMask);
+            physicsLogic = ConstructPhysicsLogic(rigidBody, collider, physicsData);
+            EventSubscribe();
+        }
 
-    protected virtual PhysicsData ConstructPhysicsData(float movementSpeed, float movementAngle, float movementAcceleration, int collisionSteps, LayerMask layerMask) {
-        return new PhysicsData(layerMask, movementSpeed, movementAngle, movementAcceleration, collisionSteps);
-    }
+        protected virtual PhysicsData ConstructPhysicsData(float movementSpeed, float movementAngle, float movementAcceleration, bool moving, int collisionSteps, LayerMask layerMask) {
+            return new PhysicsData(layerMask, movementSpeed, movementAngle, movementAcceleration, moving, collisionSteps);
+        }
 
-    protected abstract PhysicsLogic ConstructPhysicsLogic(Rigidbody2D rigidBody, Collider2D collider, PhysicsData physicsData);
+        protected abstract PhysicsLogic ConstructPhysicsLogic(Rigidbody2D rigidBody, Collider2D collider, PhysicsData physicsData);
+
+        protected virtual void EventSubscribe() {
+
+        }
     #endregion
 
     #region Cycle Methods
-    protected void FixedUpdate() {
-        physicsLogic.OnPhysicsUpdate();
-    }
+        protected void FixedUpdate() {
+            physicsLogic.OnPhysicsUpdate();
+        }
     #endregion
 }

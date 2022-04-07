@@ -61,8 +61,8 @@ public abstract class PhysicsLogic {
     #endregion
 
     #region Event Methods
-    protected virtual void ColDetectedEvent(RaycastHit2D colInfo, PhysicsData physicsData) {
-        colDetectedEvent?.Invoke(colInfo, physicsData);
-    }
+        protected virtual void ColDetectedEvent(RaycastHit2D colInfo, PhysicsData physicsData) {
+            colDetectedEvent?.Invoke(colInfo, physicsData);
+        }
     #endregion
 }

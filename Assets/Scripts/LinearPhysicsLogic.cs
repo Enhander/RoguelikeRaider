@@ -30,7 +30,7 @@ public class LinearPhysicsLogic : PhysicsLogic {
         private Vector2 CalculateVelocity(PhysicsData physicsData) {
             float xVelocity = Mathf.Cos(physicsData.MovementAngle * Mathf.Deg2Rad) * physicsData.MovementSpeed * Time.deltaTime;
             float yVelocity = Mathf.Sin(physicsData.MovementAngle * Mathf.Deg2Rad) * physicsData.MovementSpeed * Time.deltaTime;
-            return new Vector2(xVelocity, yVelocity);
+            return physicsData.Moving ? new Vector2(xVelocity, yVelocity) : Vector2.zero;
         }
 
         private void ApplyAcceleration(PhysicsData physicsData) {

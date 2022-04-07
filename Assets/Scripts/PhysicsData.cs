@@ -24,6 +24,12 @@ public class PhysicsData {
             get { return movementAcceleration; }
             set { movementAcceleration = value; }
         }
+        [SerializeField]
+        private bool moving;
+        public bool Moving {
+            get { return moving; }
+            set { moving = value; }
+        }
 
         [Header("Collision Parameters")]
         [SerializeField]
@@ -42,11 +48,12 @@ public class PhysicsData {
     #endregion
 
     #region Initialization Methods
-        public PhysicsData (LayerMask layerMask, float movementSpeed = 0f, float movementAngle = 0f, float movementAcceleration = 0f, int collisionSteps = 10) {
+        public PhysicsData (LayerMask layerMask, float movementSpeed = 0f, float movementAngle = 0f, float movementAcceleration = 0f, bool moving = false, int collisionSteps = 10) {
             this.layerMask = layerMask;
             this.movementSpeed = movementSpeed;
             this.movementAngle = movementAngle;
             this.movementAcceleration = movementAcceleration;
+            this.moving = moving;
             this.collisionSteps = collisionSteps;
         }
     #endregion
