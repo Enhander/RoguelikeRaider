@@ -28,9 +28,24 @@ public class LinearPhysicsLogic : PhysicsLogic {
         }
 
         private Vector2 CalculateVelocity(PhysicsData physicsData) {
-            float xVelocity = Mathf.Cos(physicsData.MovementAngle * Mathf.Deg2Rad) * physicsData.MovementSpeed * Time.deltaTime;
-            float yVelocity = Mathf.Sin(physicsData.MovementAngle * Mathf.Deg2Rad) * physicsData.MovementSpeed * Time.deltaTime;
-            return physicsData.Moving ? new Vector2(xVelocity, yVelocity) : Vector2.zero;
+            Vector2 totalVelocity = CalculateMovingVelocity(physicsData) + CalculateStrafingVelocity(physicsData);
+            totalVelocity = totalVelocity.normalized * physicsData.MovementSpeed * Time.deltaTime;
+            return totalVelocity;
+        }
+
+        private Vector2 CalculateMovingVelocity(PhysicsData physicsData) {
+            float xMovingVelocity = Mathf.Cos(physicsData.MovementAngle * Mathf.Deg2Rad) * physicsData.MovingDirection;
+            float yMovingVelocity = Mathf.Sin(physicsData.MovementAngle * Mathf.Deg2Rad) * physicsData.MovingDirection;
+            Vector2 movingVelocity = new Vector2(xMovingVelocity, yMovingVelocity);
+            return movingVelocity.normalized;
+        }
+
+        private Vector2 CalculateStrafingVelocity(PhysicsData physicsData) {
+            float strafingAngle = physicsData.MovementAngle - 90f;
+            float xStrafingVelocity = Mathf.Cos(strafingAngle * Mathf.Deg2Rad) * physicsData.StrafingDirection;
+            float yStrafingVelocity = Mathf.Sin(strafingAngle * Mathf.Deg2Rad) * physicsData.StrafingDirection;
+            Vector2 strafingVelocity = new Vector2(xStrafingVelocity, yStrafingVelocity);
+            return strafingVelocity.normalized;
         }
 
         private void ApplyAcceleration(PhysicsData physicsData) {

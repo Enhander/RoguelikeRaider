@@ -5,8 +5,14 @@ using Rewired;
 
 public class PlayerMovementInputLogic : InputLogic {
     #region Fields
-        public delegate void OnMoveInput(Vector2 inputVector);
+        public delegate void OnMoveInput(float direction);
         public event OnMoveInput onMoveInputEvent;
+
+        public delegate void OnStrafeInput(float direction);
+        public event OnStrafeInput onStrafeInputEvent;
+
+        public delegate void OnFacingInput(Vector2 mousePoint);
+        public event OnFacingInput onFacingInputEvent;
     #endregion
 
     #region Event Methods
@@ -15,11 +21,31 @@ public class PlayerMovementInputLogic : InputLogic {
         }
 
         private void FireMovementInputEvents() {
-            float inputX = input.GetAxisRaw(RewiredConsts.Action.Move_Horizontal);
-            float inputY = input.GetAxisRaw(RewiredConsts.Action.Move_Vertical);
-            Vector2 inputVector = new Vector2(inputX, inputY);
+            MoveInputEvent();
+            StrafeInputEvent();
+            FacingInputEvent();
+        }
 
-            onMoveInputEvent?.Invoke(inputVector);
+        private void MoveInputEvent() {
+            float direction = input.GetAxisRaw(RewiredConsts.Action.Move_Vertical);
+
+            onMoveInputEvent?.Invoke(direction);
+        }
+
+        private void StrafeInputEvent() {
+            float direction = input.GetAxisRaw(RewiredConsts.Action.Move_Horizontal);
+
+            onStrafeInputEvent?.Invoke(direction);
+        }
+
+        private void FacingInputEvent() {
+            bool setFacing = input.GetButton(RewiredConsts.Action.Face_Point);
+
+            if (setFacing) {
+                Vector2 mousePosition = ReInput.controllers.Mouse.screenPosition;
+
+                onFacingInputEvent?.Invoke(mousePosition);
+            }
         }
     #endregion
 }

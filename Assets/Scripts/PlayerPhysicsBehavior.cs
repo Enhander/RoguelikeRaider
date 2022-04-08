@@ -17,25 +17,38 @@ public class PlayerPhysicsBehavior : PhysicsBehavior {
             base.EventSubscribe();
 
             playerMovementInputLogic.onMoveInputEvent += OnMoveInput;
+            playerMovementInputLogic.onStrafeInputEvent += OnStrafeInput;
+            playerMovementInputLogic.onFacingInputEvent += OnFacingInput;
         }
     #endregion
 
     #region Event Methods
-        protected void OnMoveInput(Vector2 inputVector) {
-            ApplyMovementVector(inputVector);
+        protected void OnMoveInput(float direction) {
+            ApplyMovement(direction);
         }
 
-        protected void ApplyMovementVector(Vector2 inputVector) {
-            float degreeAngle = Mathf.Atan2(inputVector.y, inputVector.x) * Mathf.Rad2Deg;
-            bool hasInput = inputVector.magnitude != 0;
+        protected void ApplyMovement(float direction) {
+            physicsData.MovingDirection = direction;
+        }
 
-            if (hasInput) {
-                physicsData.MovementAngle = degreeAngle;
-                physicsData.Moving = true;
-            }
-            else {
-                physicsData.Moving = false;
-            }
+        protected void OnStrafeInput(float direction) {
+            ApplyStrafe(direction);
+        }
+
+        protected void ApplyStrafe(float direction) {
+            physicsData.StrafingDirection = direction;
+        }
+
+        protected void OnFacingInput(Vector2 mousePosition) {
+            ApplyFacing(mousePosition);
+        }
+
+        protected void ApplyFacing(Vector2 mousePosition) {
+            Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+            Vector2 playerPosition = rigidBody.position;
+            float facingAngle = Mathf.Atan2(mouseWorldPosition.y - playerPosition.y, mouseWorldPosition.x - playerPosition.x) * Mathf.Rad2Deg;
+
+            physicsData.MovementAngle = facingAngle;
         }
     #endregion
 }

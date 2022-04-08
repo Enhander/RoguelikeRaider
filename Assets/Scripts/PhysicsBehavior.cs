@@ -14,15 +14,17 @@ public abstract class PhysicsBehavior : MonoBehaviour {
         [SerializeField]
         private int CollisionSteps;
         [SerializeField]
-        private bool Moving;
+        private float MovingDirection;
+        [SerializeField]
+        private float StrafingDirection;
         [SerializeField]
         private LayerMask LayerMask;
 
         [Header("Inspector Injected References")]
         [SerializeReference]
-        private Rigidbody2D rigidBody;
+        protected Rigidbody2D rigidBody;
         [SerializeReference]
-        private Collider2D collider;
+        protected Collider2D collider;
 
         [Header("Debugging Viewables")]
         [SerializeReference]
@@ -33,13 +35,13 @@ public abstract class PhysicsBehavior : MonoBehaviour {
 
     #region Initialization Methods
         protected virtual void Awake() {
-            physicsData = ConstructPhysicsData(MovementSpeed, MovementAngle, MovementAcceleration, Moving, CollisionSteps, LayerMask);
+            physicsData = ConstructPhysicsData(MovementSpeed, MovementAngle, MovementAcceleration, MovingDirection, StrafingDirection, CollisionSteps, LayerMask);
             physicsLogic = ConstructPhysicsLogic(rigidBody, collider, physicsData);
             EventSubscribe();
         }
 
-        protected virtual PhysicsData ConstructPhysicsData(float movementSpeed, float movementAngle, float movementAcceleration, bool moving, int collisionSteps, LayerMask layerMask) {
-            return new PhysicsData(layerMask, movementSpeed, movementAngle, movementAcceleration, moving, collisionSteps);
+        protected virtual PhysicsData ConstructPhysicsData(float movementSpeed, float movementAngle, float movementAcceleration, float movingDirection, float strafingDirection, int collisionSteps, LayerMask layerMask) {
+            return new PhysicsData(layerMask, movementSpeed, movementAngle, movementAcceleration, movingDirection, strafingDirection, collisionSteps);
         }
 
         protected abstract PhysicsLogic ConstructPhysicsLogic(Rigidbody2D rigidBody, Collider2D collider, PhysicsData physicsData);
